@@ -1,0 +1,73 @@
+# Learn_Unreal/.gitignore
+
+# ----------------------------------
+# 全局通用规则（适用于所有项目）
+# ----------------------------------
+
+# 操作系统自动生成的文件
+.DS_Store
+Thumbs.db
+*.tmp
+
+# IDE/编辑器相关文件
+.vscode/
+.idea/
+*.sln
+*.suo
+*.user
+*.userprefs
+*.userosscache
+*.vsp
+
+# ----------------------------------
+# 虚幻引擎通用规则（递归匹配所有项目目录）
+# ----------------------------------
+
+# 忽略所有项目中的编译生成目录
+**/Binaries/
+**/Intermediate/
+**/Saved/
+**/DerivedDataCache/
+**/Build/
+
+# 忽略自动生成的文件
+**/*.log
+**/*.backup
+**/*.sdf
+**/*.opendb
+**/*.unsavedfiles
+
+# 忽略项目配置缓存
+**/.vsconfig
+**/.vs/
+**/FileOpenOrder/
+
+# 忽略自动生成的本地化文件
+**/Content/Localizations/**
+
+# 忽略内容浏览器缩略图
+**/Content/Thumbnails/
+
+# 忽略插件临时文件（如需保留插件源码，请删除此规则）
+**/Plugins/**/Binaries/
+**/Plugins/**/Intermediate/
+
+# 忽略烘焙后的资产（如光照贴图）
+**/Content/**/BuiltData/
+
+# ----------------------------------
+# 可选规则（按需启用）
+# ----------------------------------
+
+# 忽略平台相关构建产物（例如 Android/iOS）
+# ​**/Build/Android/
+# ​**/Build/IOS/
+
+# 忽略特定工具生成的文件（如 Quixel Bridge）
+# ​**/Content/Megascans/
+
+# 忽略第三方库（如需保留，请注释掉）
+# ​**/ThirdParty/
+
+# 忽略 Unreal Engine 引擎本体（如果项目不包含引擎源码）
+# Engine/

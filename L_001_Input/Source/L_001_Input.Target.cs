@@ -12,4 +12,6 @@ public class L_001_InputTarget : TargetRules
 		IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_5;
 		ExtraModuleNames.Add("L_001_Input");
 	}
+	private static bool bHasWarnedAboutShared = false;
+	
 }

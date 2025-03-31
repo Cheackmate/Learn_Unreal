@@ -72,13 +72,13 @@ private:
 	/** Returns true if we need to be showing the loading screen. */
 	bool CheckForAnyNeedToShowLoadingScreen();
 
-	/** Returns true if we want to be showing the loading screen (if we need to or are artificially forcing it on for other reasons). */
+	/** 如果我们要显示加载屏幕（如果我们确实需要这么做，或者出于其他人为原因而强制显示的话），则返回真值。 */
 	bool ShouldShowLoadingScreen();
 
-	/** Returns true if we are in the initial loading flow before this screen should be used */
+	/** 如果此时我们正处于初始加载流程中（即在使用此屏幕之前），则返回真值。 */
 	bool IsShowingInitialLoadingScreen() const;
 
-	/** Shows the loading screen. Sets up the loading screen widget on the viewport */
+	/** 显示加载屏幕。在视口上设置加载屏幕小部件。*/
 	void ShowLoadingScreen();
 
 	/** Hides the loading screen. The loading screen widget will be destroyed */
@@ -96,10 +96,10 @@ private:
 	void ChangePerformanceSettings(bool bEnabingLoadingScreen);
 
 private:
-	/** Delegate broadcast when the loading screen visibility changes */
+	/** 当加载屏幕的可见性发生变化时触发广播通知*/
 	FOnLoadingScreenVisibilityChangedDelegate LoadingScreenVisibilityChanged;
 
-	/** A reference to the loading screen widget we are displaying (if any) */
+	/**我们正在显示的加载屏幕小部件的引用（如果有的话） */
 	TSharedPtr<SWidget> LoadingScreenWidget;
 
 	/** Input processor to eat all input while the loading screen is shown */
@@ -117,7 +117,7 @@ private:
 	/** The time the loading screen most recently wanted to be dismissed (might still be up due to a min display duration requirement) **/
 	double TimeLoadingScreenLastDismissed = -1.0;
 
-	/** The time until the next log for why the loading screen is still up */
+	/** 距离下一次出现加载屏幕提示信息的时间还有多久（即加载界面仍未消失的时间） */
 	double TimeUntilNextLogHeartbeatSeconds = 0.0;
 
 	/** 当我们位于 PreLoadMap 和 PostLoadMap 之间时为 True。 */

@@ -228,11 +228,12 @@ void ULoadingScreenManager::UpdateLoadingScreen()
 	{
 		const UCommonLoadingScreenSettings* Settings = GetDefault<UCommonLoadingScreenSettings>();
 		
-		// If we don't make it to the specified checkpoint in the given time will trigger the hang detector so we can better determine where progress stalled.
+		// 如果我们未能在规定时间内抵达指定的检查点，就会触发挂起检测器，这样我们就能更清楚地确定进度停滞的具体位置。
  		FThreadHeartBeat::Get().MonitorCheckpointStart(GetFName(), Settings->LoadingScreenHeartbeatHangDuration);
 
 		ShowLoadingScreen();
 
+		// 控制日志输出间隔
  		if ((Settings->LogLoadingScreenHeartbeatInterval > 0.0f) && (TimeUntilNextLogHeartbeatSeconds <= 0.0))
  		{
 			bLogLoadingScreenStatus = true;
@@ -429,16 +430,16 @@ bool ULoadingScreenManager::ShouldShowLoadingScreen()
 	// Check for a need to show the loading screen
 	const bool bNeedToShowLoadingScreen = CheckForAnyNeedToShowLoadingScreen();
 
-	// Keep the loading screen up a bit longer if desired
+	// 如果需要，将加载屏幕保持更长的时间 （？这里直接写死是不想展示了么？行吧）
 	bool bWantToForceShowLoadingScreen = false;
 	if (bNeedToShowLoadingScreen)
 	{
-		// Still need to show it
+		// 还是得展示一下它
 		TimeLoadingScreenLastDismissed = -1.0;
 	}
 	else
 	{
-		// Don't *need* to show the screen anymore, but might still want to for a bit
+		// 不必再显示屏幕了，不过可能还得再看一会儿（屏幕内容）
 		const double CurrentTime = FPlatformTime::Seconds();
 		const bool bCanHoldLoadingScreen = (!GIsEditor || Settings->HoldLoadingScreenAdditionalSecsEvenInEditor);
 		const double HoldLoadingScreenAdditionalSecs = bCanHoldLoadingScreen ? LoadingScreenCVars::HoldLoadingScreenAdditionalSecs : 0.0;
@@ -473,25 +474,28 @@ bool ULoadingScreenManager::IsShowingInitialLoadingScreen() const
 
 void ULoadingScreenManager::ShowLoadingScreen()
 {
+	// 如果正在加载屏幕则不进行操作。
 	if (bCurrentlyShowingLoadingScreen)
 	{
 		return;
 	}
 
-	// Unable to show loading screen if the engine is still loading with its loading screen.
+	// 如果引擎仍在加载且带有加载屏幕的情况下，无法显示加载屏幕。
 	if (FPreLoadScreenManager::Get() && FPreLoadScreenManager::Get()->HasActivePreLoadScreenType(EPreLoadScreenTypes::EngineLoadingScreen))
 	{
 		return;
 	}
 
+	// 开始加载屏幕的时间
 	TimeLoadingScreenShown = FPlatformTime::Seconds();
-
+	// 表示当前正在加载屏幕
 	bCurrentlyShowingLoadingScreen = true;
-
+	
 	CSV_EVENT(LoadingScreen, TEXT("Show"));
 
 	const UCommonLoadingScreenSettings* Settings = GetDefault<UCommonLoadingScreenSettings>();
 
+	// 如果此时我们正处于初始加载流程中（即在使用此屏幕之前），则不管了
 	if (IsShowingInitialLoadingScreen())
 	{
 		UE_LOG(LogLoadingScreen, Log, TEXT("Showing loading screen when 'IsShowingInitialLoadingScreen()' is true."));
@@ -507,7 +511,8 @@ void ULoadingScreenManager::ShowLoadingScreen()
 		// Eat input while the loading screen is displayed
 		// 停止接受输入
 		StartBlockingInput();
-
+		
+		// 加载屏幕可见性发生变化，开始展示屏幕了
 		LoadingScreenVisibilityChanged.Broadcast(/*bIsVisible=*/ true);
 
 		// Create the loading screen widget
@@ -515,6 +520,7 @@ void ULoadingScreenManager::ShowLoadingScreen()
 		TSubclassOf<UUserWidget> LoadingScreenWidgetClass = Settings->LoadingScreenWidget.TryLoadClass<UUserWidget>();
 		if (UUserWidget* UserWidget = UUserWidget::CreateWidgetInstance(*LocalGameInstance, LoadingScreenWidgetClass, NAME_None))
 		{
+			// 获取slate组件，如果该组件不存在则构建它
 			LoadingScreenWidget = UserWidget->TakeWidget();
 		}
 		else
@@ -526,13 +532,15 @@ void ULoadingScreenManager::ShowLoadingScreen()
 		// Add to the viewport at a high ZOrder to make sure it is on top of most things
 		// 配置屏幕组件的展示优先级，确保在最上层
 		UGameViewportClient* GameViewportClient = LocalGameInstance->GetGameViewportClient();
+		// UI组件添加到窗口中
 		GameViewportClient->AddViewportWidgetContent(LoadingScreenWidget.ToSharedRef(), Settings->LoadingScreenZOrder);
-
+		
+		// 它的作用是根据加载屏幕的开启或关闭状态，动态调整引擎的渲染、资源加载和系统监控行为，确保加载过程高效且避免卡顿误判。
 		ChangePerformanceSettings(/*bEnableLoadingScreen=*/ true);
 
 		if (!GIsEditor || Settings->ForceTickLoadingScreenEvenInEditor)
 		{
-			// Tick Slate to make sure the loading screen is displayed immediately
+			// Tick Slate 确保加载屏幕能立即显示出来
 			FSlateApplication::Get().Tick();
 		}
 	}
@@ -614,7 +622,7 @@ void ULoadingScreenManager::ChangePerformanceSettings(bool bEnabingLoadingScreen
 
 	FShaderPipelineCache::SetBatchMode(bEnabingLoadingScreen ? FShaderPipelineCache::BatchMode::Fast : FShaderPipelineCache::BatchMode::Background);
 
-	// Don't bother drawing the 3D world while we're loading
+	// 不要在加载时费心绘制 3D 世界
 	GameViewportClient->bDisableWorldRendering = bEnabingLoadingScreen;
 
 	// Make sure to prioritize streaming in levels if the loading screen is up

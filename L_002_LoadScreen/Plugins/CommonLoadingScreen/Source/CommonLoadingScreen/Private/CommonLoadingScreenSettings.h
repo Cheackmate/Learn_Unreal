@@ -38,11 +38,11 @@ public:
  	UPROPERTY(config, EditAnywhere, Category=Configuration, meta=(ForceUnits=s, ConsoleVariable="CommonLoadingScreen.HoldLoadingScreenAdditionalSecs"))
 	float HoldLoadingScreenAdditionalSecs = 2.0f;
 
-	// The interval in seconds beyond which the loading screen is considered permanently hung (if non-zero).
+	// 超过该秒数间隔后，加载屏幕即被视为永久挂起（若该值非零）。
  	UPROPERTY(config, EditAnywhere, Category=Configuration, meta=(ForceUnits=s))
 	float LoadingScreenHeartbeatHangDuration = 0.0f;
 
-	// The interval in seconds between each log of what is keeping a loading screen up (if non-zero).
+	// 每条记录（如果非零）显示加载屏幕未关闭的原因所间隔的时间（以秒为单位）
  	UPROPERTY(config, EditAnywhere, Category=Configuration, meta=(ForceUnits=s))
 	float LogLoadingScreenHeartbeatInterval = 5.0f;
 

@@ -5,7 +5,7 @@
 	"Description": "",
 	"Modules": [
 		{
-			"Name": "L_002_LoadScreen",
+			"Name": "L_003_ExpersionSys",
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
 		}
@@ -17,14 +17,6 @@
 			"TargetAllowList": [
 				"Editor"
 			]
-		},
-		{
-			"Name": "CommonLoadingScreen",
-			"Enabled": false
-		},
-		{
-			"Name": "MyLoadScreen",
-			"Enabled": true
 		}
 	]
 }

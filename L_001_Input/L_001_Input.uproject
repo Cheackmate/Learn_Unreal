@@ -40,10 +40,6 @@
 			]
 		},
 		{
-			"Name": "CommonLoadingScreen",
-			"Enabled": true
-		},
-		{
 			"Name": "CommonConversation",
 			"Enabled": true
 		},
